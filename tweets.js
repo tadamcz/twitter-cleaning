@@ -9,14 +9,12 @@ const main = async () => {
     try {
       if (Date.parse(tweet.created_at) <= treshold) {
         console.log(`Deleting tweet ${tweet.id}`)
-
-        await twitter.v1.deleteTweet(tweet.id)
+        await twitter.v2.deleteTweet(tweet.id)
       }
     } catch (error) {
       if (error instanceof ApiResponseError && error.rateLimitError && error.rateLimit) {
-        console.log('rate limit hit, waiting for the timer reset (this can take up to 15 minutes)')
-        await sleep(error.rateLimit.reset)
-        continue
+        console.log('rate limit hit')
+        return
       }
 
       throw error
