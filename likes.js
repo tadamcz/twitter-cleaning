@@ -10,18 +10,17 @@ const main = async () => {
   for await (const likedTweet of likedTweets) {
     try {
       if (Date.parse(likedTweet.created_at) <= treshold) {
+        console.log(`Liking tweet ${likedTweet.id}`)
+        await twitter.v2.like(user.data.id, likedTweet.id)
         console.log(`Unliking tweet ${likedTweet.id}`)
         await twitter.v2.unlike(user.data.id, likedTweet.id)
       }
     } catch (error) {
-      if (error instanceof ApiResponseError && error.rateLimitError && error.rateLimit) {
         console.log('rate limit hit')
         return
       }
-
-      throw error
-    }
   }
 }
+
 
 main().catch((e) => console.log(e))
